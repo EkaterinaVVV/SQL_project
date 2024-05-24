@@ -1,0 +1,124 @@
+
+DROP TABLE IF EXISTS Clients;
+
+CREATE TABLE Clients (
+ID_client VARCHAR(200) PRIMARY Key,
+Buy_date Date,
+Birthday Date);
+
+--insert into Clients values ("0001", "12-05-2024",  "25-08-1980" );
+--insert into Clients values ("0002", "15-05-2024","13-02-1995" );
+--insert into Clients values ("0003", "24-05-2024", "15-08-2000" );
+--insert into Clients values ("0004", "01-05-2024","02-06-1979" );
+--insert into Clients values ("0005", "01-05-2024","09-11-2001" );
+--insert into Clients values ("0006", "03-05-2024", "23-08-1999" );
+--insert into Clients values ("0007", "09-05-2024", "01-07-1988" );
+--insert into Clients values ("0008", "09-05-2024","22-12-1975" );
+--insert into Clients values ("0009", "24-05-2024","03-09-2002" );
+--insert into Clients values ("0010", "15-05-2024", "15-03-1998" );
+--insert into Clients values ("0011", "01-05-2024","21-05-2001" );
+--insert into Clients values ("0012", "15-05-2024","25-08-2000" );
+--insert into Clients values ("0013", "11-05-2024","14-03-1987" );
+--insert into Clients values ("0014", "12-05-2024","02-11-1990" );
+--insert into Clients values ("0015", "01-05-2024","29-05-1980" );
+--insert into Clients values ("0016", "16-05-2024", "31-08-1980" );
+--insert into Clients values ("0017", "23-05-2024","06-09-2003" );
+--insert into Clients values ("0018", "11-05-2024", "25-10-2004" );
+--insert into Clients values ("0019", "17-05-2024","12-09-2002" );
+--insert into Clients values ("0020", "29-05-2024","06-10-1995" );
+DROP TABLE IF EXISTS Departaments;
+
+CREATE TABLE Departaments (
+Amount INT,
+Sales_plan INT,
+Fact_of_sales INT,
+DepNo VARCHAR(160) PRIMARY key);
+--insert into Departaments values (5,20000000 , 0 , "01Продажи");
+--insert into Departaments values (5,20000000 , 0 , "02Продажи");
+--insert into Departaments values (3,0 , 0 , "01Юрисд");
+--insert into Departaments values (4,10000 , 10000 , "01Инженер");
+--insert into Departaments values (2,2000 ,2000 , "01HR");
+--insert into Departaments values (2,15000 , 15000 , "02HR");
+--insert into Departaments values (2,40000 , 40000 , "01Финанс");
+--insert into Departaments values (4,70000 , 70000 , "02Финанс");
+--insert into Departaments values (3,250000 , 250000 , "01IT");
+--insert into Departaments values (2,450000 , 450000 , "02IT");
+
+
+DROP TABLE IF EXISTS Employees;
+--Создаем таблицу Сотрудники
+CREATE TABLE Employees (
+ID_employee INT,
+Name VARCHAR(180) NOT NULL,
+Position VARCHAR(100),
+Salary INT,
+Sex VARCHAR(3),
+DepNo VARCHAR(160) REFERENCES Departaments(DepNo),
+PRIMARY KEY (ID_employee, DepNo),
+CHECK (Sex IN ('м', 'ж')),
+FOREIGN KEY (DepNo) REFERENCES Departaments (DepNo));
+
+--insert into Employees values ("100001","Петров Иван", "генеральный директор" , 200000, "м",  "01Продажи");
+--insert into Employees values ("300002","Адександрова Алина", "главный юрист" , 100000, "ж",  "01Юрисд");
+--insert into Employees values ("100002","Мельников Андрей", "промоутер" , 25000, "м",  "02Продажи");
+--insert into Employees values ("300002","Кузьмина Марина", "юрист" , 30000, "ж",  "01Юрисд");
+--insert into Employees values ("100003","Андреева Анна", "промоутер" , 250000, "ж",  "01Продажи");
+--insert into Employees values ("300003","Карпов Тихон", "юрист" , 300000, "м",  "01Юрисд");
+--insert into Employees values ("200001","Некрасов Дмитрий", "главный по оборудованию" , 40000, "м",  "01Инженер");
+--insert into Employees values ("200002","Иванов Максим", "инженер по оборудованию" , 200000, "м",  "01Инженер");
+--insert into Employees values ("100004","Орлов Максим", "менеджер по продажам" , 30000, "м",  "01Продажи");
+--insert into Employees values ("100005","Касаткина Милана", "менеджер по продажам" , 30000, "ж",  "02Продажи");
+--insert into Employees values ("200003","Тарасов Артем", "инженер обшего профиля" , 200000, "м",  "01Инженер");
+--insert into Employees values ("500001","Сизова Екатерина", "менеджер по сотрудникам" , 20000, "ж",  "01HR");
+--insert into Employees values ("500001","Фокин Виктор", "главный по тестированию сотрудников" , 30000, "м",  "01HR");
+--insert into Employees values ("500002","Калинина Елизавета", "менеджер по сотрудникам" , 200000, "ж",  "02HR");
+--insert into Employees values ("500003","Петров Иван", "главный по тестированию сотрудников" , 300000, "м",  "02HR");
+--insert into Employees values ("600001","Куликов Максим", "финансовый аналитик" , 700000, "м",  "01Финанс");
+--insert into Employees values ("600002","Добин Илья", "ответсвенный за фин риски" , 90000, "м",  "01Финанс");
+--insert into Employees values ("600003","Павлов Богдан", "аудитор" , 85000, "м",  "02Финанс");
+--insert into Employees values ("600004","Ильин Николай", "риск-менеджер" , 70000, "м",  "02Финанс");
+--insert into Employees values ("600005","Борисов Арсений", "главный аналитик" , 100000, "м",  "02Финанс");
+--insert into Employees values ("600006","Козлов Андрей", "финансовый аналитик" , 200000, "м",  "02Финанс");
+--insert into Employees values ("200002","Борисова Мария", "инженер по проектам" , 27000, "ж",  "01Инженер");
+--insert into Employees values ("700001","Прохоров Владимир", "С разработчик" , 100000, "м",  "01IT"); 
+--insert into Employees values ("700002","Алексеев Лев", "Puthon разработчик" , 100000, "м",  "01IT"); 
+--insert into Employees values ("700001","Горбачев Василий", "аналитик данных" , 90000, "м",  "02IT"); 
+--insert into Employees values ("700001","Тихонов Тимофей", "программист С" , 95000, "м",  "01IT"); 
+--insert into Employees values ("700001","Муратова Элина", "системный аналитик" , 120000, "ж",  "01IT");
+--insert into Employees values ("100006","Грекова Елена", "менеджер по работе с постоянным клиентами" , 35000, "ж",  "01Продажи");
+--insert into Employees values ("100007","Золотова Евгения", "менеджер по работе с постоянным клиентами" , 35000, "ж",  "02Продажи");
+--insert into Employees values ("100008","Маслова Анастасия", "промоутер" , 20000, "ж",  "02Продажи");
+--insert into Employees values ("100009","Корнеев Виктор", "менеджер по продажам" , 25000, "м",  "01Продажи");
+--insert into Employees values ("100010","Сергев Филипп", "менеджер по работе с постоянным клиентами" , 35000, "м",  "02Продажи");
+
+
+
+
+
+
+DROP TABLE IF EXISTS Avto;
+ 
+CREATE TABLE Avto (
+Type VARCHAR(200),
+Amount INT,
+Mileage VARCHAR(180), 
+ID_avto VARCHAR(200) PRIMARY KEY);
+
+
+
+DROP TABLE IF EXISTS Deals;
+
+CREATE TABLE Deals (
+ Id_deal VARCHAR(200) PRIMARY KEY,
+ID_client VARCHAR(200) ,
+ID_employee INT,
+Sale_date Date,
+ID_avto VARCHAR(180),
+SUMM INT,
+Amount INT,
+FOREIGN KEY (ID_client) REFERENCES Clients(ID_client),
+FOREIGN KEY (ID_employee) REFERENCES Employees(ID_employee),
+FOREIGN KEY (ID_avto) REFERENCES Avto(ID_avto)
+);
+
+
