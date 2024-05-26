@@ -1,31 +1,24 @@
-
 DROP TABLE IF EXISTS Clients;
 
 CREATE TABLE Clients (
 ID_client VARCHAR(200) PRIMARY Key,
-Buy_date Date,
+PhoneNum VARCHAR(200),
 Birthday Date);
 
---insert into Clients values ("0001", "12-05-2024",  "25-08-1980" );
---insert into Clients values ("0002", "15-05-2024","13-02-1995" );
---insert into Clients values ("0003", "24-05-2024", "15-08-2000" );
---insert into Clients values ("0004", "01-05-2024","02-06-1979" );
---insert into Clients values ("0005", "01-05-2024","09-11-2001" );
---insert into Clients values ("0006", "03-05-2024", "23-08-1999" );
---insert into Clients values ("0007", "09-05-2024", "01-07-1988" );
---insert into Clients values ("0008", "09-05-2024","22-12-1975" );
---insert into Clients values ("0009", "24-05-2024","03-09-2002" );
---insert into Clients values ("0010", "15-05-2024", "15-03-1998" );
---insert into Clients values ("0011", "01-05-2024","21-05-2001" );
---insert into Clients values ("0012", "15-05-2024","25-08-2000" );
---insert into Clients values ("0013", "11-05-2024","14-03-1987" );
---insert into Clients values ("0014", "12-05-2024","02-11-1990" );
---insert into Clients values ("0015", "01-05-2024","29-05-1980" );
---insert into Clients values ("0016", "16-05-2024", "31-08-1980" );
---insert into Clients values ("0017", "23-05-2024","06-09-2003" );
---insert into Clients values ("0018", "11-05-2024", "25-10-2004" );
---insert into Clients values ("0019", "17-05-2024","12-09-2002" );
---insert into Clients values ("0020", "29-05-2024","06-10-1995" );
+--insert into Clients values ('01', '7-916-230-32-35',  '25-08-1980' );
+--insert into Clients values ('02', '7-903-543-32-11','13-02-1995' );
+--insert into Clients values ('03', '7-968-456-85-13', '15-08-2000' );
+--insert into Clients values ('04', '7-916-525-27-14','02-06-1979' );
+--insert into Clients values ('05', '7-968-853-37-15','09-11-2001' );
+--insert into Clients values ('06', '7-916-635-27-27', '23-08-1999' );
+--insert into Clients values ('07', '7-903-862-63-73', '01-07-1988' );
+--insert into Clients values ('08', '7-916-258-89-26','22-12-1975' );
+--insert into Clients values ('09', '7-968-269-32-83','03-09-2002' );
+--insert into Clients values ('010', '7-903-247-19-26', '15-03-1998' );
+--insert into Clients values ('011', '7-916-852-01-37','21-05-2001' );
+--insert into Clients values ('012', '7-916-824-00-00','25-08-2000' );
+--SELECT * from Clients;
+
 DROP TABLE IF EXISTS Departaments;
 
 CREATE TABLE Departaments (
@@ -33,22 +26,18 @@ Amount INT,
 Sales_plan INT,
 Fact_of_sales INT,
 DepNo VARCHAR(160) PRIMARY key);
---insert into Departaments values (5,20000000 , 0 , "01Продажи");
---insert into Departaments values (5,20000000 , 0 , "02Продажи");
---insert into Departaments values (3,0 , 0 , "01Юрисд");
---insert into Departaments values (4,10000 , 10000 , "01Инженер");
---insert into Departaments values (2,2000 ,2000 , "01HR");
---insert into Departaments values (2,15000 , 15000 , "02HR");
---insert into Departaments values (2,40000 , 40000 , "01Финанс");
---insert into Departaments values (4,70000 , 70000 , "02Финанс");
---insert into Departaments values (3,250000 , 250000 , "01IT");
---insert into Departaments values (2,450000 , 450000 , "02IT");
+insert into Departaments values (5,20000000 , 0 , '01Продажи');
+insert into Departaments values (5,20000000 , 0 , '02Продажи');
+insert into Departaments values (3,10000000 , 0 , '03Продажи');
+insert into Departaments values (4,10000000 , 0 , '04Продажи');
+insert into Departaments values (2,10000000 , 0 , '05Продажи');
+--SELECT * from Departaments;
 
 
 DROP TABLE IF EXISTS Employees;
 --Создаем таблицу Сотрудники
 CREATE TABLE Employees (
-ID_employee INT,
+ID_employee VARCHAR(180),
 Name VARCHAR(180) NOT NULL,
 Position VARCHAR(100),
 Salary INT,
@@ -58,67 +47,123 @@ PRIMARY KEY (ID_employee, DepNo),
 CHECK (Sex IN ('м', 'ж')),
 FOREIGN KEY (DepNo) REFERENCES Departaments (DepNo));
 
---insert into Employees values ("100001","Петров Иван", "генеральный директор" , 200000, "м",  "01Продажи");
---insert into Employees values ("300002","Адександрова Алина", "главный юрист" , 100000, "ж",  "01Юрисд");
---insert into Employees values ("100002","Мельников Андрей", "промоутер" , 25000, "м",  "02Продажи");
---insert into Employees values ("300002","Кузьмина Марина", "юрист" , 30000, "ж",  "01Юрисд");
---insert into Employees values ("100003","Андреева Анна", "промоутер" , 250000, "ж",  "01Продажи");
---insert into Employees values ("300003","Карпов Тихон", "юрист" , 300000, "м",  "01Юрисд");
---insert into Employees values ("200001","Некрасов Дмитрий", "главный по оборудованию" , 40000, "м",  "01Инженер");
---insert into Employees values ("200002","Иванов Максим", "инженер по оборудованию" , 200000, "м",  "01Инженер");
---insert into Employees values ("100004","Орлов Максим", "менеджер по продажам" , 30000, "м",  "01Продажи");
---insert into Employees values ("100005","Касаткина Милана", "менеджер по продажам" , 30000, "ж",  "02Продажи");
---insert into Employees values ("200003","Тарасов Артем", "инженер обшего профиля" , 200000, "м",  "01Инженер");
---insert into Employees values ("500001","Сизова Екатерина", "менеджер по сотрудникам" , 20000, "ж",  "01HR");
---insert into Employees values ("500001","Фокин Виктор", "главный по тестированию сотрудников" , 30000, "м",  "01HR");
---insert into Employees values ("500002","Калинина Елизавета", "менеджер по сотрудникам" , 200000, "ж",  "02HR");
---insert into Employees values ("500003","Петров Иван", "главный по тестированию сотрудников" , 300000, "м",  "02HR");
---insert into Employees values ("600001","Куликов Максим", "финансовый аналитик" , 700000, "м",  "01Финанс");
---insert into Employees values ("600002","Добин Илья", "ответсвенный за фин риски" , 90000, "м",  "01Финанс");
---insert into Employees values ("600003","Павлов Богдан", "аудитор" , 85000, "м",  "02Финанс");
---insert into Employees values ("600004","Ильин Николай", "риск-менеджер" , 70000, "м",  "02Финанс");
---insert into Employees values ("600005","Борисов Арсений", "главный аналитик" , 100000, "м",  "02Финанс");
---insert into Employees values ("600006","Козлов Андрей", "финансовый аналитик" , 200000, "м",  "02Финанс");
---insert into Employees values ("200002","Борисова Мария", "инженер по проектам" , 27000, "ж",  "01Инженер");
---insert into Employees values ("700001","Прохоров Владимир", "С разработчик" , 100000, "м",  "01IT"); 
---insert into Employees values ("700002","Алексеев Лев", "Puthon разработчик" , 100000, "м",  "01IT"); 
---insert into Employees values ("700001","Горбачев Василий", "аналитик данных" , 90000, "м",  "02IT"); 
---insert into Employees values ("700001","Тихонов Тимофей", "программист С" , 95000, "м",  "01IT"); 
---insert into Employees values ("700001","Муратова Элина", "системный аналитик" , 120000, "ж",  "01IT");
---insert into Employees values ("100006","Грекова Елена", "менеджер по работе с постоянным клиентами" , 35000, "ж",  "01Продажи");
---insert into Employees values ("100007","Золотова Евгения", "менеджер по работе с постоянным клиентами" , 35000, "ж",  "02Продажи");
---insert into Employees values ("100008","Маслова Анастасия", "промоутер" , 20000, "ж",  "02Продажи");
---insert into Employees values ("100009","Корнеев Виктор", "менеджер по продажам" , 25000, "м",  "01Продажи");
---insert into Employees values ("100010","Сергев Филипп", "менеджер по работе с постоянным клиентами" , 35000, "м",  "02Продажи");
+insert into Employees values ('101','Петров Иван', 'генеральный директор' , 200000, 'м',  '01Продажи');
+insert into Employees values ('301','Александрова Алина', 'менеджер по продажам' , 100000, 'ж',  '03Продажи');
+insert into Employees values ('201','Мельников Андрей', 'менеджер по продажам' , 25000, 'м',  '02Продажи');
+insert into Employees values ('302','Филимонов Андрей', 'менеджер по продажам' , 250000, 'м',  '03Продажи');
+insert into Employees values ('102','Андреева Анна', 'менеджер по продажам' , 250000, 'ж',  '01Продажи');
+insert into Employees values ('303','Карпов Тихон', 'менеджер по продажам' , 300000, 'м',  '03Продажи');
+insert into Employees values ('401','Некрасов Дмитрий', 'менеджер по продажам' , 40000, 'м',  '04Продажи');
+Insert into Employees values ('402','Иванов Максим', 'менеджер по продажам' , 200000, 'м',  '04Продажи');
+insert into Employees values ('103','Орлов Максим', 'менеджер по продажам' , 30000, 'м',  '01Продажи');
+insert into Employees values ('202','Касаткина Милана', 'менеджер по продажам' , 30000, 'ж',  '02Продажи');
+insert into Employees values ('403','Тарасов Артем', 'менеджер по продажам' , 200000, 'м',  '04Продажи');
+insert into Employees values ('501','Сизова Екатерина', 'менеджер по продажам' , 20000, 'ж',  '05Продажи');
+insert into Employees values ('502','Фокин Виктор', 'менеджер по продажам' , 30000, 'м',  '05Продажи');
+insert into Employees values ('404','Борисова Мария', 'менеджер по продажам' , 27000, 'ж',  '04Продажи');
+insert into Employees values ('104','Грекова Елена', 'менеджер по продажам' , 35000, 'ж',  '01Продажи');
+insert into Employees values ('203','Золотова Евгения', 'менеджер по продажам' , 35000, 'ж',  '02Продажи');
+insert into Employees values ('204','Маслова Анастасия', 'менеджер по продажам' , 20000, 'ж',  '02Продажи');
+insert into Employees values ('105','Корнеев Виктор', 'менеджер по продажам' , 25000, 'м',  '01Продажи');
+insert into Employees values ('205','Сергеев Филипп', 'менеджер по продажам' , 35000, 'м',  '02Продажи');
 
+--SELECT * from Employees;
 
-
-
-
-
-DROP TABLE IF EXISTS Avto;
+DROP TABLE IF EXISTS Car_types;
  
-CREATE TABLE Avto (
-Type VARCHAR(200),
-Amount INT,
-Mileage VARCHAR(180), 
-ID_avto VARCHAR(200) PRIMARY KEY);
+CREATE TABLE Car_types(
+Id_car VARCHAR(180) PRIMARY KEY,
+typecar VARCHAR(180) NOT NULL,
+lft INT,
+rgt INT,
+CHECK (lft > 0),
+CHECK (rgt > 1),
+CHECK (lft < rgt)
+);
 
+--SELECT * from Car_types;
 
+insert into Car_types values ('1', 'Sedan', 1, 8);
+INSERT INTO Car_types VALUES ('4', 'All-Wheel Drive', 2, 3);
+INSERT INTO Car_types VALUES ('5', 'Rear-Wheel Drive', 4, 5);
+INSERT INTO Car_types VALUES ('6', 'Front-Wheel Drive', 6, 7);
+insert into Car_types values ('2', 'Hatchback', 9, 16);
+INSERT INTO Car_types VALUES ('7', 'All-Wheel Drive', 10, 11);
+INSERT INTO Car_types VALUES ('8', 'Rear-Wheel Drive', 12, 13);
+INSERT INTO Car_types VALUES ('9', 'Front-Wheel Drive', 14, 15);
+insert into Car_types values ('3', 'Jeep', 17, 24);
+INSERT INTO Car_types VALUES ('10', 'All-Wheel Drive', 18, 19);
+INSERT INTO Car_types VALUES ('11', 'Rear-Wheel Drive', 20, 21);
+INSERT INTO Car_types VALUES ('12', 'Front-Wheel Drive', 22, 23);
+
+--SELECT * from Car_types;
+
+DROP TABLE IF EXISTS car_mark;
+
+CREATE TABLE car_mark (
+Id_mark INT,
+Id_car VARCHAR(180),
+Mark VARCHAR(100),
+Mileage INT,
+Quantity INT,
+PRIMARY KEY (id_mark, id_car),
+FOREIGN KEY (Id_car) REFERENCES car_types(Id_car)
+);
+
+insert into car_mark values (1, '4', 'Audi', 5000000, 6);
+insert into car_mark values (2, '10', 'BMW', 10000000, 3);
+insert into car_mark values (3, '7', 'Volkswagen', 4000000, 15);
+insert into car_mark values (4, '8', 'Lada', 1000000, 16);
+insert into car_mark values (5, '8', 'Renault', 1500000, 12);
+insert into car_mark values (6, '10', 'Audi', 8500000, 9);
+insert into car_mark values (7, '6', 'Jaguar', 5500000, 10);
+insert into car_mark values (8, '5', 'KIA', 2500000, 11);
+insert into car_mark values (9, '12', 'HAVAL', 3000000, 11);
+insert into car_mark values (10, '9', 'BMW', 3300000, 5);
+insert into car_mark values (11, '11', 'Geely', 2700000, 16);
+insert into car_mark values (12, '5', 'Volkswagen', 2600000, 12);
+insert into car_mark values (13, '4', 'Mercedes', 8000000, 3);
+insert into car_mark values (14, '7', 'Hyundai', 6000000, 4);
+insert into car_mark values (15, '10', 'Mercedes', 1100000, 4);
+insert into car_mark values (16, '4', 'BMW', 12000000, 2);
+insert into car_mark values (17, '10', 'Land Rover', 4500000, 6);
+
+--SELECT * from car_mark;
 
 DROP TABLE IF EXISTS Deals;
 
 CREATE TABLE Deals (
- Id_deal VARCHAR(200) PRIMARY KEY,
+Id_deal VARCHAR(200) PRIMARY KEY,
 ID_client VARCHAR(200) ,
-ID_employee INT,
+ID_employee VARCHAR(180),
+Id_mark INT,
 Sale_date Date,
-ID_avto VARCHAR(180),
-SUMM INT,
 Amount INT,
+CHECK (Amount > 0),
 FOREIGN KEY (ID_client) REFERENCES Clients(ID_client),
 FOREIGN KEY (ID_employee) REFERENCES Employees(ID_employee),
-FOREIGN KEY (ID_avto) REFERENCES Avto(ID_avto)
+FOREIGN KEY (Id_mark) REFERENCES car_mark(Id_mark)
 );
 
-
+insert into Deals values ('001', '02', '301', 9, '11-08-2023', 1);
+insert into Deals values ('002', '010', '502', 5, '12-07-2023', 2);
+insert into Deals values ('003', '012', '403', 8, '17-12-2023', 3);
+insert into Deals values ('004', '03', '103', 10, '16-12-2023', 4);
+insert into Deals values ('005', '01', '105', 11,'18-01-2023', 8);
+insert into Deals values ('006', '05', '205', 12, '21-01-2023', 1);
+insert into Deals values ('007', '012', '302', 7, '29-04-2023', 3);
+insert into Deals values ('008', '04', '401', 6, '15-10-2023', 1);
+insert into Deals values ('009', '06', '202', 5, '10-11-2023', 2);
+insert into Deals values ('0010', '08', '403', 8, '03-03-2023', 4);
+insert into Deals values ('0011', '09', '204', 9, '01-02-2023', 2);
+insert into Deals values ('0012', '06', '201', 10, '18-07-2023', 1);
+insert into Deals values ('0013', '07', '402', 2, '03-08-2023', 1);
+insert into Deals values ('0014', '01', '202', 13,'11-06-2023', 3);
+insert into Deals values ('0015', '012', '203', 3, '10-01-2023', 1);
+insert into Deals values ('0016', '01', '104', 14, '04-02-2023', 2);
+insert into Deals values ('0017', '04', '404', 1, '02-12-2023', 3);
+insert into Deals values ('0018', '07', '501', 15,'06-09-2023', 1);
+insert into Deals values ('0019', '09', '303', 17, '08-11-2023', 1);
+insert into Deals values ('0020', '02', '102', 16, '09-04-2023', 2);
+insert into Deals values ('0021', '05', '401', 6, '13-12-2023', 1);
+--SELECT * from Deals;
