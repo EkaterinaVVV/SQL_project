@@ -5,18 +5,18 @@ ID_client VARCHAR(200) PRIMARY Key,
 PhoneNum VARCHAR(200),
 Birthday Date);
 
---insert into Clients values ('01', '7-916-230-32-35',  '25-08-1980' );
---insert into Clients values ('02', '7-903-543-32-11','13-02-1995' );
---insert into Clients values ('03', '7-968-456-85-13', '15-08-2000' );
---insert into Clients values ('04', '7-916-525-27-14','02-06-1979' );
---insert into Clients values ('05', '7-968-853-37-15','09-11-2001' );
---insert into Clients values ('06', '7-916-635-27-27', '23-08-1999' );
---insert into Clients values ('07', '7-903-862-63-73', '01-07-1988' );
---insert into Clients values ('08', '7-916-258-89-26','22-12-1975' );
---insert into Clients values ('09', '7-968-269-32-83','03-09-2002' );
---insert into Clients values ('010', '7-903-247-19-26', '15-03-1998' );
---insert into Clients values ('011', '7-916-852-01-37','21-05-2001' );
---insert into Clients values ('012', '7-916-824-00-00','25-08-2000' );
+insert into Clients values ('01', '7-916-230-32-35',  '25-08-1980' );
+insert into Clients values ('02', '7-903-543-32-11','13-02-1995' );
+insert into Clients values ('03', '7-968-456-85-13', '15-08-2000' );
+insert into Clients values ('04', '7-916-525-27-14','02-06-1979' );
+insert into Clients values ('05', '7-968-853-37-15','09-11-2001' );
+insert into Clients values ('06', '7-916-635-27-27', '23-08-1999' );
+insert into Clients values ('07', '7-903-862-63-73', '01-07-1988' );
+insert into Clients values ('08', '7-916-258-89-26','22-12-1975' );
+insert into Clients values ('09', '7-968-269-32-83','03-09-2002' );
+insert into Clients values ('010', '7-903-247-19-26', '15-03-1998' );
+insert into Clients values ('011', '7-916-852-01-37','21-05-2001' );
+insert into Clients values ('012', '7-916-824-00-00','25-08-2000' );
 --SELECT * from Clients;
 
 DROP TABLE IF EXISTS Departaments;
@@ -24,13 +24,13 @@ DROP TABLE IF EXISTS Departaments;
 CREATE TABLE Departaments (
 Amount INT,
 Sales_plan INT,
-Fact_of_sales INT,
+Fact_of_sales INT DEFAULT 0,
 DepNo VARCHAR(160) PRIMARY key);
-insert into Departaments values (5,20000000 , 0 , '01Продажи');
-insert into Departaments values (5,20000000 , 0 , '02Продажи');
-insert into Departaments values (3,10000000 , 0 , '03Продажи');
-insert into Departaments values (4,10000000 , 0 , '04Продажи');
-insert into Departaments values (2,10000000 , 0 , '05Продажи');
+insert into Departaments values (5,70000000 , 0 , '01Продажи');
+insert into Departaments values (5,70000000 , 0 , '02Продажи');
+insert into Departaments values (3,30000000 , 0 , '03Продажи');
+insert into Departaments values (4,60000000 , 0 , '04Продажи');
+insert into Departaments values (2,15000000 , 0 , '05Продажи');
 --SELECT * from Departaments;
 
 
@@ -104,7 +104,7 @@ CREATE TABLE car_mark (
 Id_mark INT,
 Id_car VARCHAR(180),
 Mark VARCHAR(100),
-Mileage INT,
+cost INT,
 Quantity INT,
 PRIMARY KEY (id_mark, id_car),
 FOREIGN KEY (Id_car) REFERENCES car_types(Id_car)
@@ -137,7 +137,7 @@ Id_deal VARCHAR(200) PRIMARY KEY,
 ID_client VARCHAR(200) ,
 ID_employee VARCHAR(180),
 Id_mark INT,
-Deal_date Date,
+Sale_date Date,
 Amount INT,
 CHECK (Amount > 0),
 FOREIGN KEY (ID_client) REFERENCES Clients(ID_client),
@@ -167,3 +167,51 @@ insert into Deals values ('0019', '09', '303', 17, '08-11-2023', 1);
 insert into Deals values ('0020', '02', '102', 16, '09-04-2023', 2);
 insert into Deals values ('0021', '05', '401', 6, '13-12-2023', 1);
 --SELECT * from Deals;
+
+--Наши запросы
+--Запрос 1
+--В таблице Departaments у нас есть столбец Fact_of_sales, который нужно заполнить. То есть мы хотим отследить 
+--за 2023 год на какую сумму осуществлялись продажи для каждого из отдела. Для этого нужно отследить количество 
+--проданных автомобителей для каждого сотрудника из таблицы Deals и умножить на стоимость машины из таблицы
+--car_mark. Также не забыть о том, что каждый сотрудник мог совершить более одной сделки и в каждом отделе работает
+--несколько сотрудников.
+UPDATE Departaments
+SET Fact_of_sales = (
+    SELECT SUM(deal.Amount * cm.cost)
+    FROM Deals deal
+    INNER JOIN car_mark cm ON deal.Id_mark = cm.Id_mark
+    INNER JOIN Employees e ON deal.ID_employee = e.ID_employee
+    WHERE e.DepNo = Departaments.DepNo
+    GROUP BY e.DepNo
+);
+
+SELECT * from Departaments;
+
+--Запрос 2
+--Добавляем стобец summ_count в Employee, чтобы посчитать сумму на которые заключили сделки сотрудники
+ALTER TABLE Employees add COLUMN summ_count int DEFAULT 0;
+
+--SELECT * from Employees;
+
+--Отобразить на какую сумму продал автомобили каждый из сотрудников.
+UPDATE Employees
+set summ_count = (
+  SELECT SUM(d.Amount * cm.cost) AS 'Сумма_продаж'
+  FROM Deals d
+  INNER JOIN car_mark cm ON d.Id_mark = cm.Id_mark
+  INNER JOIN Employees e ON d.ID_employee = e.ID_employee
+  WHERE Employees.ID_employee = d.ID_employee
+);
+--Выводим сотрудников без NULL в summ_coint
+SELECT * from Employees 
+WHERE Employees.summ_count is not NULL;
+
+--Запрос 3
+--Посчитали, какой процент плана продаж выполнил каждый работник по отделам
+SELECT e.id_employee, e.name, e.depno, e.summ_count, d.sales_plan,
+ROUND((CAST(e.summ_count as FLOAT) / d.sales_plan) * 100, 2) AS percentage
+FROM Departaments d 
+INNER JOIN Employees e ON e.DepNo = d.DepNo
+WHERE e.summ_count IS NOT NULL
+ORDER BY percentage Asc;
+
