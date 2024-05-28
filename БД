@@ -191,7 +191,7 @@ SELECT * from Departaments;
 --Добавляем стобец summ_count в Employee, чтобы посчитать сумму на которые заключили сделки сотрудники
 ALTER TABLE Employees add COLUMN summ_count int DEFAULT 0;
 
---SELECT * from Employees;
+SELECT * from Employees;
 
 --Отобразить на какую сумму продал автомобили каждый из сотрудников.
 UPDATE Employees
@@ -214,4 +214,49 @@ FROM Departaments d
 INNER JOIN Employees e ON e.DepNo = d.DepNo
 WHERE e.summ_count IS NOT NULL
 ORDER BY percentage Asc;
+select * From Employees;
+--Запрос 4
+--Теперь нужно посчитать чистую прибыль компании на данный момент. Для этого нужно сложить 
+--суммы всех проданных машин по отделам в качестве доходов, посчитать суммы всех зарплат и вычесть их
+-- из прибыли и вычесть также остальные издержки( на оборудование, аренду и другое). Условно будет считать
+-- все остальные издержки равными 4 000 000.
+select SUM(d.fact_of_sales) - SUM(e.Salary) - 4000000 As "Чистая прибыль компании"
+from Departaments d
+NATURAL join Employees e;
+--880848000
+--Запрос 5
+--Начинаем подбирать оптимальную бонусную систему
+-- Начнем с самой простой. К зарплатам сотрудников отдела продаж будем добавлять 2% от суммы проданных машин
+ALTER TABLE Employees add COLUMN new_salary int DEFAULT 0;
 
+UPDATE Employees
+  set new_salary = Salary + (summ_count * 0.02 );
+
+select * From Employees;
+-- Снова посчитаем выручку компании
+select SUM(d.fact_of_sales) - SUM(e.new_salary) - 4000000 As "Чистая прибыль компании"
+from Departaments d
+NATURAL join Employees e;
+--877022000
+-- Запрос 6
+-- Попробуем другую бонусную систему. Будем действовать по формеле Зарплата = Fn + (Факт продаж - Rмин) * Kn
+-- Идея такая : мы поделим всех сотрудников по диапазонам продаж( Rmin и Rmax). Для каждого диапазона будет создан свой 
+-- коэфициент Kn и своя констаната Fn. 
+-- Добавляем новый столбец salary1
+ALTER TABLE Employees ADD COLUMN salary1 INT DEFAULT 0;
+UPDATE Employees
+SET salary1 = CASE
+    WHEN summ_count >= 1 AND summ_count <= 3500000 THEN 0 + (summ_count - 1) * 0.1
+    WHEN summ_count > 3500000 AND summ_count <= 10000000 THEN 80000 + (summ_count - 3500001) * 0.08
+    WHEN summ_count > 10000000 AND summ_count <= 20000000 THEN 120000 + (summ_count - 10000001) * 0.05
+    WHEN summ_count > 20000000 AND summ_count <= 30000000 THEN 150000 + (summ_count - 20000001) * 0.03
+    ELSE 20000 + (summ_count - 30000001) * 0.01
+END;
+select *FROM Employees;
+-- Считаем чистую прибыль компании
+select SUM(d.fact_of_sales) - SUM(e.salary1) - 4000000 As "Чистая прибыль компании"
+from Departaments d
+NATURAL join Employees e;
+-- 877132001.21
+-- Заметим, что в последнем случае мы получили максимальную прибыль, а это значит, что бонусная система
+-- напрямую влияет на прибыль компании
