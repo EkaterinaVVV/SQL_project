@@ -208,55 +208,96 @@ WHERE Employees.summ_count is not NULL;
 
 --Запрос 3
 --Посчитали, какой процент плана продаж выполнил каждый работник по отделам
-SELECT e.id_employee, e.name, e.depno, e.summ_count, d.sales_plan,
-ROUND((CAST(e.summ_count as FLOAT) / d.sales_plan) * 100, 2) AS percentage
-FROM Departaments d 
-INNER JOIN Employees e ON e.DepNo = d.DepNo
-WHERE e.summ_count IS NOT NULL
-ORDER BY percentage Asc;
-select * From Employees;
+--SELECT e.id_employee, e.name, e.depno, e.summ_count, d.sales_plan,
+--ROUND((CAST(e.summ_count as FLOAT) / d.sales_plan) * 100, 2) AS percentage
+--FROM Departaments d 
+--INNER JOIN Employees e ON e.DepNo = d.DepNo
+--WHERE e.summ_count IS NOT NULL
+--ORDER BY percentage Asc;
+--select * From Employees;
 --Запрос 4
 --Теперь нужно посчитать чистую прибыль компании на данный момент. Для этого нужно сложить 
 --суммы всех проданных машин по отделам в качестве доходов, посчитать суммы всех зарплат и вычесть их
 -- из прибыли и вычесть также остальные издержки( на оборудование, аренду и другое). Условно будет считать
 -- все остальные издержки равными 4 000 000.
-select SUM(d.fact_of_sales) - SUM(e.Salary) - 4000000 As "Чистая прибыль компании"
-from Departaments d
-NATURAL join Employees e;
+--select SUM(d.fact_of_sales) - SUM(e.Salary) - 4000000 As "Чистая прибыль компании"
+--from Departaments d
+--NATURAL join Employees e;
 --880848000
 --Запрос 5
 --Начинаем подбирать оптимальную бонусную систему
 -- Начнем с самой простой. К зарплатам сотрудников отдела продаж будем добавлять 2% от суммы проданных машин
-ALTER TABLE Employees add COLUMN new_salary int DEFAULT 0;
+--ALTER TABLE Employees add COLUMN new_salary int DEFAULT 0;
 
-UPDATE Employees
-  set new_salary = Salary + (summ_count * 0.02 );
+--UPDATE Employees
+  --set new_salary = Salary + (summ_count * 0.02 );
 
-select * From Employees;
+--select * From Employees;
 -- Снова посчитаем выручку компании
-select SUM(d.fact_of_sales) - SUM(e.new_salary) - 4000000 As "Чистая прибыль компании"
-from Departaments d
-NATURAL join Employees e;
+--select SUM(d.fact_of_sales) - SUM(e.new_salary) - 4000000 As "Чистая прибыль компании"
+--from Departaments d
+--NATURAL join Employees e;
 --877022000
 -- Запрос 6
 -- Попробуем другую бонусную систему. Будем действовать по формеле Зарплата = Fn + (Факт продаж - Rмин) * Kn
 -- Идея такая : мы поделим всех сотрудников по диапазонам продаж( Rmin и Rmax). Для каждого диапазона будет создан свой 
 -- коэфициент Kn и своя констаната Fn. 
 -- Добавляем новый столбец salary1
-ALTER TABLE Employees ADD COLUMN salary1 INT DEFAULT 0;
-UPDATE Employees
-SET salary1 = CASE
-    WHEN summ_count >= 1 AND summ_count <= 3500000 THEN 0 + (summ_count - 1) * 0.1
-    WHEN summ_count > 3500000 AND summ_count <= 10000000 THEN 80000 + (summ_count - 3500001) * 0.08
-    WHEN summ_count > 10000000 AND summ_count <= 20000000 THEN 120000 + (summ_count - 10000001) * 0.05
-    WHEN summ_count > 20000000 AND summ_count <= 30000000 THEN 150000 + (summ_count - 20000001) * 0.03
-    ELSE 20000 + (summ_count - 30000001) * 0.01
-END;
-select *FROM Employees;
+--ALTER TABLE Employees ADD COLUMN salary1 INT DEFAULT 0;
+--UPDATE Employees
+--SET salary1 = CASE
+   -- WHEN summ_count >= 1 AND summ_count <= 3500000 THEN 0 + (summ_count - 1) * 0.1
+    --WHEN summ_count > 3500000 AND summ_count <= 10000000 THEN 80000 + (summ_count - 3500001) * 0.08
+    --WHEN summ_count > 10000000 AND summ_count <= 20000000 THEN 120000 + (summ_count - 10000001) * 0.05
+    --WHEN summ_count > 20000000 AND summ_count <= 30000000 THEN 150000 + (summ_count - 20000001) * 0.03
+    --ELSE 20000 + (summ_count - 30000001) * 0.01
+--END;
+--select *FROM Employees;
 -- Считаем чистую прибыль компании
-select SUM(d.fact_of_sales) - SUM(e.salary1) - 4000000 As "Чистая прибыль компании"
-from Departaments d
-NATURAL join Employees e;
+--select SUM(d.fact_of_sales) - SUM(e.salary1) - 4000000 As "Чистая прибыль компании"
+--from Departaments d
+--NATURAL join Employees e;
 -- 877132001.21
 -- Заметим, что в последнем случае мы получили максимальную прибыль, а это значит, что бонусная система
 -- напрямую влияет на прибыль компании
+--Запрос 7
+-- Вывести топ-5 сотрудников, которые чаще всего покупают автомобили (постоянные клиенты)
+--SELECT e.ID_employee, e.Name AS Имя, COUNT(d.Id_deal) AS "Количество купленных машин"
+--FROM Employees e
+--JOIN Deals d ON e.ID_employee = d.ID_employee
+--GROUP BY e.ID_employee, e.Name
+--ORDER BY "Количество купленных машин" DESC
+--LIMIT 5;  
+-- Запрос 8
+-- Вывести информацию о сотрудниках, работающих в отделах, которые перевыплнили свой план продаж 
+-- с сортировкой по убыванию общей суммы продаж
+--WITH DepartmentSales AS (
+    --SELECT d.DepNo, d.Sales_plan, d.Fact_of_sales
+    --FROM Departaments d
+    --WHERE d.Fact_of_sales > d.Sales_plan
+--),
+--EmployeeSales AS (
+    --SELECT e.ID_employee, e.Name, e.Position, e.DepNo, COUNT(deal.Id_deal) AS TotalDeals, SUM(deal.Amount) AS TotalSales
+    --FROM Employees e
+    --JOIN Deals deal ON e.ID_employee = deal.ID_employee
+    --GROUP BY e.ID_employee, e.Name, e.Position, e.DepNo
+--)
+--SELECT es.Name, es.Position, es.DepNo, es.TotalDeals, es.TotalSales, ds.Sales_plan, ds.Fact_of_sales
+--FROM EmployeeSales es
+--JOIN DepartmentSales ds ON es.DepNo = ds.DepNo
+--ORDER BY es.TotalSales DESC;
+-- Запрос 9
+-- Определить какие марки автомобилей чаще всего покупали и какие клиенты с информацией о машинах и клиентах.
+WITH BestCar AS (
+    SELECT cm.Mark, cm.Id_car, COUNT(d.Id_deal) AS "Куплено"
+    FROM car_mark cm
+    JOIN Deals d ON cm.Id_mark = d.Id_mark
+    GROUP BY cm.Mark, cm.Id_car
+    ORDER BY  "Куплено" DESC
+    LIMIT 5
+)
+SELECT c.ID_client, c.PhoneNum as "Номер телефона", c.Birthday as "Дата рождения", mbc.Mark as "Марка", mbc.Id_car, mbc. "Куплено"
+FROM Clients c
+JOIN Deals d ON c.ID_client = d.ID_client
+JOIN car_mark cm ON d.Id_mark = cm.Id_mark
+JOIN BestCar mbc ON cm.Mark = mbc.Mark AND cm.Id_car = mbc.Id_car;
