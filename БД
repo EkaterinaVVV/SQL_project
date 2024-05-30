@@ -301,3 +301,48 @@ FROM Clients c
 JOIN Deals d ON c.ID_client = d.ID_client
 JOIN car_mark cm ON d.Id_mark = cm.Id_mark
 JOIN BestCar mbc ON cm.Mark = mbc.Mark AND cm.Id_car = mbc.Id_car;
+
+--Запрос 10
+-- Найти сотрудников с наибольшими продажами и вычислить среднюю их зарплату после начисления бонусов
+SELECT 
+    e.ID_employee,
+    e.Name,
+    e.DepNo,
+    e.summ_count,
+    e.Salary1,
+    AVG(e.Salary1) OVER() AS 'Средняя_зарплата'
+FROM Employees e
+WHERE e.summ_count IS NOT NULL AND e.summ_count > 20000000 
+ORDER BY e.summ_count DESC;
+SELECT * from Employees;
+
+--Запрос 11
+-- Вывести топ 6 самых продаваемых машин из Deals, их тип, цену, количество продаж и количество сделок, в которых они участвовали
+SELECT 
+    cm.Mark,
+    cm.cost,
+    ct.typecar,
+    COUNT(d.Id_deal) AS Number_of_Deals,
+    SUM(d.Amount) AS Total_Quantity_Sold
+FROM Deals d
+INNER JOIN car_mark cm ON d.Id_mark = cm.Id_mark
+INNER JOIN Car_types ct ON cm.Id_car = ct.Id_car
+GROUP BY cm.Mark, cm.cost, ct.typecar
+ORDER BY Total_Quantity_Sold DESC
+LIMIT 6;
+--Запрос 12
+--Вывести клиентов, которые совершали больше всего, а также, кто их обслуживал, какие машины покупали и их тип
+SELECT 
+    c.ID_client,
+    c.PhoneNum,
+    c.Birthday,
+    e.Name AS Employee_Name,
+    cm.Mark AS Car_Mark,
+    ct.typecar AS Car_Type
+FROM Clients c
+inner JOIN Deals d ON c.ID_client = d.ID_client
+inner JOIN Employees e ON d.ID_employee = e.ID_employee
+inner JOIN car_mark cm ON d.Id_mark = cm.Id_mark
+inner JOIN Car_types ct ON cm.Id_car = ct.Id_car
+GROUP BY c.ID_client, c.PhoneNum, c.Birthday, e.Name, cm.Mark, ct.typecar
+LIMIT 10;
