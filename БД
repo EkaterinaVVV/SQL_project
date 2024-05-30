@@ -1,9 +1,13 @@
+--Создаем таблицу Клиенты
+
 DROP TABLE IF EXISTS Clients;
 
 CREATE TABLE Clients (
 ID_client VARCHAR(200) PRIMARY Key,
 PhoneNum VARCHAR(200),
 Birthday Date);
+
+--Заполняем поля таблицы Клиенты
 
 insert into Clients values ('01', '7-916-230-32-35',  '25-08-1980' );
 insert into Clients values ('02', '7-903-543-32-11','13-02-1995' );
@@ -17,7 +21,9 @@ insert into Clients values ('09', '7-968-269-32-83','03-09-2002' );
 insert into Clients values ('010', '7-903-247-19-26', '15-03-1998' );
 insert into Clients values ('011', '7-916-852-01-37','21-05-2001' );
 insert into Clients values ('012', '7-916-824-00-00','25-08-2000' );
---SELECT * from Clients;
+
+
+--Создаем таблицу Отделы
 
 DROP TABLE IF EXISTS Departaments;
 
@@ -26,16 +32,19 @@ Amount INT,
 Sales_plan INT,
 Fact_of_sales INT DEFAULT 0,
 DepNo VARCHAR(160) PRIMARY key);
+
+--Заполняем поля таблицы Отделы
+
 insert into Departaments values (5,70000000 , 0 , '01Продажи');
 insert into Departaments values (5,70000000 , 0 , '02Продажи');
 insert into Departaments values (3,30000000 , 0 , '03Продажи');
 insert into Departaments values (4,60000000 , 0 , '04Продажи');
 insert into Departaments values (2,15000000 , 0 , '05Продажи');
---SELECT * from Departaments;
 
+--Создаем таблицу Сотрудники
 
 DROP TABLE IF EXISTS Employees;
---Создаем таблицу Сотрудники
+
 CREATE TABLE Employees (
 ID_employee VARCHAR(180),
 Name VARCHAR(180) NOT NULL,
@@ -46,6 +55,8 @@ DepNo VARCHAR(160) REFERENCES Departaments(DepNo),
 PRIMARY KEY (ID_employee, DepNo),
 CHECK (Sex IN ('м', 'ж')),
 FOREIGN KEY (DepNo) REFERENCES Departaments (DepNo));
+
+--Заполняем поля таблицы Сотрудники
 
 insert into Employees values ('101','Петров Иван', 'генеральный директор' , 200000, 'м',  '01Продажи');
 insert into Employees values ('301','Александрова Алина', 'менеджер по продажам' , 100000, 'ж',  '03Продажи');
@@ -67,7 +78,7 @@ insert into Employees values ('204','Маслова Анастасия', 'мен
 insert into Employees values ('105','Корнеев Виктор', 'менеджер по продажам' , 25000, 'м',  '01Продажи');
 insert into Employees values ('205','Сергеев Филипп', 'менеджер по продажам' , 35000, 'м',  '02Продажи');
 
---SELECT * from Employees;
+--Создаем таблицу Тип машин
 
 DROP TABLE IF EXISTS Car_types;
  
@@ -81,7 +92,7 @@ CHECK (rgt > 1),
 CHECK (lft < rgt)
 );
 
---SELECT * from Car_types;
+--Заполняем поля таблицы Тип машин
 
 insert into Car_types values ('1', 'Sedan', 1, 8);
 INSERT INTO Car_types VALUES ('4', 'All-Wheel Drive', 2, 3);
@@ -96,7 +107,7 @@ INSERT INTO Car_types VALUES ('10', 'All-Wheel Drive', 18, 19);
 INSERT INTO Car_types VALUES ('11', 'Rear-Wheel Drive', 20, 21);
 INSERT INTO Car_types VALUES ('12', 'Front-Wheel Drive', 22, 23);
 
---SELECT * from Car_types;
+--Создаем таблицу Марка машин
 
 DROP TABLE IF EXISTS car_mark;
 
@@ -109,6 +120,8 @@ Quantity INT,
 PRIMARY KEY (id_mark, id_car),
 FOREIGN KEY (Id_car) REFERENCES car_types(Id_car)
 );
+
+--Заполняем поля таблицы Марка машин
 
 insert into car_mark values (1, '4', 'Audi', 5000000, 6);
 insert into car_mark values (2, '10', 'BMW', 10000000, 3);
@@ -128,7 +141,7 @@ insert into car_mark values (15, '10', 'Mercedes', 1100000, 4);
 insert into car_mark values (16, '4', 'BMW', 12000000, 2);
 insert into car_mark values (17, '10', 'Land Rover', 4500000, 6);
 
---SELECT * from car_mark;
+--Создаем таблицу Сделки
 
 DROP TABLE IF EXISTS Deals;
 
@@ -144,6 +157,8 @@ FOREIGN KEY (ID_client) REFERENCES Clients(ID_client),
 FOREIGN KEY (ID_employee) REFERENCES Employees(ID_employee),
 FOREIGN KEY (Id_mark) REFERENCES car_mark(Id_mark)
 );
+
+--Заполняем поля таблицы Сделки
 
 insert into Deals values ('001', '02', '301', 9, '11-08-2023', 1);
 insert into Deals values ('002', '010', '502', 5, '12-07-2023', 2);
@@ -166,7 +181,7 @@ insert into Deals values ('0018', '07', '501', 15,'06-09-2023', 1);
 insert into Deals values ('0019', '09', '303', 17, '08-11-2023', 1);
 insert into Deals values ('0020', '02', '102', 16, '09-04-2023', 2);
 insert into Deals values ('0021', '05', '401', 6, '13-12-2023', 1);
---SELECT * from Deals;
+
 
 --Наши запросы
 --Запрос 1
@@ -189,11 +204,12 @@ SELECT * from Departaments;
 
 --Запрос 2
 --Добавляем стобец summ_count в Employee, чтобы посчитать сумму на которые заключили сделки сотрудники
-ALTER TABLE Employees add COLUMN summ_count int DEFAULT 0;
 
+ALTER TABLE Employees add COLUMN summ_count int DEFAULT 0;
 SELECT * from Employees;
 
 --Отобразить на какую сумму продал автомобили каждый из сотрудников.
+
 UPDATE Employees
 set summ_count = (
   SELECT SUM(d.Amount * cm.cost) AS 'Сумма_продаж'
@@ -203,91 +219,108 @@ set summ_count = (
   WHERE Employees.ID_employee = d.ID_employee
 );
 --Выводим сотрудников без NULL в summ_coint
+
 SELECT * from Employees 
 WHERE Employees.summ_count is not NULL;
 
 --Запрос 3
---Посчитали, какой процент плана продаж выполнил каждый работник по отделам
---SELECT e.id_employee, e.name, e.depno, e.summ_count, d.sales_plan,
---ROUND((CAST(e.summ_count as FLOAT) / d.sales_plan) * 100, 2) AS percentage
---FROM Departaments d 
---INNER JOIN Employees e ON e.DepNo = d.DepNo
---WHERE e.summ_count IS NOT NULL
---ORDER BY percentage Asc;
---select * From Employees;
+--Посчитать какой процент плана продаж выполнил каждый работник по отделам
+
+SELECT e.id_employee, e.name, e.depno, e.summ_count, d.sales_plan,
+ROUND((CAST(e.summ_count as FLOAT) / d.sales_plan) * 100, 2) AS percentage
+FROM Departaments d 
+INNER JOIN Employees e ON e.DepNo = d.DepNo
+WHERE e.summ_count IS NOT NULL
+ORDER BY percentage Asc;
+select * From Employees;
+
 --Запрос 4
 --Теперь нужно посчитать чистую прибыль компании на данный момент. Для этого нужно сложить 
 --суммы всех проданных машин по отделам в качестве доходов, посчитать суммы всех зарплат и вычесть их
 -- из прибыли и вычесть также остальные издержки( на оборудование, аренду и другое). Условно будет считать
 -- все остальные издержки равными 4 000 000.
---select SUM(d.fact_of_sales) - SUM(e.Salary) - 4000000 As "Чистая прибыль компании"
---from Departaments d
---NATURAL join Employees e;
---880848000
+
+select SUM(d.fact_of_sales) - SUM(e.Salary) - 4000000 As "Чистая прибыль компании"
+from Departaments d
+NATURAL join Employees e;
+-- Получили 880848000
+
 --Запрос 5
 --Начинаем подбирать оптимальную бонусную систему
 -- Начнем с самой простой. К зарплатам сотрудников отдела продаж будем добавлять 2% от суммы проданных машин
---ALTER TABLE Employees add COLUMN new_salary int DEFAULT 0;
 
---UPDATE Employees
-  --set new_salary = Salary + (summ_count * 0.02 );
+ALTER TABLE Employees add COLUMN new_salary int DEFAULT 0;
+UPDATE Employees
+  set new_salary = Salary + (summ_count * 0.02 );
+select * From Employees;
 
---select * From Employees;
 -- Снова посчитаем выручку компании
---select SUM(d.fact_of_sales) - SUM(e.new_salary) - 4000000 As "Чистая прибыль компании"
---from Departaments d
---NATURAL join Employees e;
---877022000
+
+select SUM(d.fact_of_sales) - SUM(e.new_salary) - 4000000 As "Чистая прибыль компании"
+from Departaments d
+NATURAL join Employees e;
+--Получили 877022000
+
 -- Запрос 6
 -- Попробуем другую бонусную систему. Будем действовать по формеле Зарплата = Fn + (Факт продаж - Rмин) * Kn
 -- Идея такая : мы поделим всех сотрудников по диапазонам продаж( Rmin и Rmax). Для каждого диапазона будет создан свой 
 -- коэфициент Kn и своя констаната Fn. 
+
 -- Добавляем новый столбец salary1
---ALTER TABLE Employees ADD COLUMN salary1 INT DEFAULT 0;
---UPDATE Employees
---SET salary1 = CASE
-   -- WHEN summ_count >= 1 AND summ_count <= 3500000 THEN 0 + (summ_count - 1) * 0.1
-    --WHEN summ_count > 3500000 AND summ_count <= 10000000 THEN 80000 + (summ_count - 3500001) * 0.08
-    --WHEN summ_count > 10000000 AND summ_count <= 20000000 THEN 120000 + (summ_count - 10000001) * 0.05
-    --WHEN summ_count > 20000000 AND summ_count <= 30000000 THEN 150000 + (summ_count - 20000001) * 0.03
-    --ELSE 20000 + (summ_count - 30000001) * 0.01
---END;
---select *FROM Employees;
+
+ALTER TABLE Employees ADD COLUMN salary1 INT DEFAULT 0;
+UPDATE Employees
+SET salary1 = CASE
+    WHEN summ_count >= 1 AND summ_count <= 3500000 THEN 0 + (summ_count - 1) * 0.1
+    WHEN summ_count > 3500000 AND summ_count <= 10000000 THEN 80000 + (summ_count - 3500001) * 0.08
+    WHEN summ_count > 10000000 AND summ_count <= 20000000 THEN 120000 + (summ_count - 10000001) * 0.05
+    WHEN summ_count > 20000000 AND summ_count <= 30000000 THEN 150000 + (summ_count - 20000001) * 0.03
+    ELSE 20000 + (summ_count - 30000001) * 0.01
+END;
+select *FROM Employees;
+
 -- Считаем чистую прибыль компании
---select SUM(d.fact_of_sales) - SUM(e.salary1) - 4000000 As "Чистая прибыль компании"
---from Departaments d
---NATURAL join Employees e;
--- 877132001.21
+
+select SUM(d.fact_of_sales) - SUM(e.salary1) - 4000000 As "Чистая прибыль компании"
+from Departaments d
+NATURAL join Employees e;
+-- Получили 877132001.21
+
 -- Заметим, что в последнем случае мы получили максимальную прибыль, а это значит, что бонусная система
 -- напрямую влияет на прибыль компании
+
 --Запрос 7
 -- Вывести топ-5 сотрудников, которые чаще всего покупают автомобили (постоянные клиенты)
---SELECT e.ID_employee, e.Name AS Имя, COUNT(d.Id_deal) AS "Количество купленных машин"
---FROM Employees e
---JOIN Deals d ON e.ID_employee = d.ID_employee
---GROUP BY e.ID_employee, e.Name
---ORDER BY "Количество купленных машин" DESC
---LIMIT 5;  
+
+SELECT e.ID_employee, e.Name AS Имя, COUNT(d.Id_deal) AS "Количество купленных машин"
+FROM Employees e
+JOIN Deals d ON e.ID_employee = d.ID_employee
+GROUP BY e.ID_employee, e.Name
+ORDER BY "Количество купленных машин" DESC
+LIMIT 5;  
 -- Запрос 8
 -- Вывести информацию о сотрудниках, работающих в отделах, которые перевыплнили свой план продаж 
 -- с сортировкой по убыванию общей суммы продаж
---WITH DepartmentSales AS (
-    --SELECT d.DepNo, d.Sales_plan, d.Fact_of_sales
-    --FROM Departaments d
-    --WHERE d.Fact_of_sales > d.Sales_plan
---),
---EmployeeSales AS (
-    --SELECT e.ID_employee, e.Name, e.Position, e.DepNo, COUNT(deal.Id_deal) AS TotalDeals, SUM(deal.Amount) AS TotalSales
-    --FROM Employees e
-    --JOIN Deals deal ON e.ID_employee = deal.ID_employee
-    --GROUP BY e.ID_employee, e.Name, e.Position, e.DepNo
---)
---SELECT es.Name, es.Position, es.DepNo, es.TotalDeals, es.TotalSales, ds.Sales_plan, ds.Fact_of_sales
---FROM EmployeeSales es
---JOIN DepartmentSales ds ON es.DepNo = ds.DepNo
---ORDER BY es.TotalSales DESC;
+
+WITH DepartmentSales AS (
+    SELECT d.DepNo, d.Sales_plan, d.Fact_of_sales
+    FROM Departaments d
+    WHERE d.Fact_of_sales > d.Sales_plan
+),
+EmployeeSales AS (
+    SELECT e.ID_employee, e.Name, e.Position, e.DepNo, COUNT(deal.Id_deal) AS TotalDeals, SUM(deal.Amount) AS TotalSales
+    FROM Employees e
+    JOIN Deals deal ON e.ID_employee = deal.ID_employee
+    GROUP BY e.ID_employee, e.Name, e.Position, e.DepNo
+)
+SELECT es.Name, es.Position, es.DepNo, es.TotalDeals, es.TotalSales, ds.Sales_plan, ds.Fact_of_sales
+FROM EmployeeSales es
+JOIN DepartmentSales ds ON es.DepNo = ds.DepNo
+ORDER BY es.TotalSales DESC;
+
 -- Запрос 9
 -- Определить какие марки автомобилей чаще всего покупали и какие клиенты с информацией о машинах и клиентах.
+
 WITH BestCar AS (
     SELECT cm.Mark, cm.Id_car, COUNT(d.Id_deal) AS "Куплено"
     FROM car_mark cm
@@ -304,6 +337,7 @@ JOIN BestCar mbc ON cm.Mark = mbc.Mark AND cm.Id_car = mbc.Id_car;
 
 --Запрос 10
 -- Найти сотрудников с наибольшими продажами и вычислить среднюю их зарплату после начисления бонусов
+
 SELECT 
     e.ID_employee,
     e.Name,
@@ -318,6 +352,7 @@ SELECT * from Employees;
 
 --Запрос 11
 -- Вывести топ 6 самых продаваемых машин из Deals, их тип, цену, количество продаж и количество сделок, в которых они участвовали
+
 SELECT 
     cm.Mark,
     cm.cost,
@@ -330,8 +365,10 @@ INNER JOIN Car_types ct ON cm.Id_car = ct.Id_car
 GROUP BY cm.Mark, cm.cost, ct.typecar
 ORDER BY Total_Quantity_Sold DESC
 LIMIT 6;
+
 --Запрос 12
 --Вывести клиентов, которые совершали больше всего, а также, кто их обслуживал, какие машины покупали и их тип
+
 SELECT 
     c.ID_client,
     c.PhoneNum,
